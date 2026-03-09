@@ -17,10 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from django.http import HttpResponse
+import os
 from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet
 
 def root_view(request):
-    return HttpResponse('<h1>Welcome to Octofit Tracker API</h1><p>Visit <a href="/api/">/api/</a> for REST endpoints.</p>')
+    codespace_name = os.environ.get('CODESPACE_NAME', '')
+    codespace_url = f"https://{codespace_name}-8000.app.github.dev" if codespace_name else "http://localhost:8000"
+    html = f"""
+        <h1>Welcome to Octofit Tracker API</h1>
+        <p>Codespace URL: <a href='{codespace_url}'>{codespace_url}</a></p>
+        <p>Visit <a href='/api/'>/api/</a> for REST endpoints.</p>
+    """
+    return HttpResponse(html)
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
