@@ -15,8 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from django.http import HttpResponse
+from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet
+
+def root_view(request):
+    return HttpResponse('<h1>Welcome to Octofit Tracker API</h1><p>Visit <a href="/api/">/api/</a> for REST endpoints.</p>')
+
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'teams', TeamViewSet)
+router.register(r'activities', ActivityViewSet)
+router.register(r'leaderboards', LeaderboardViewSet)
+router.register(r'workouts', WorkoutViewSet)
 
 urlpatterns = [
+    path('', root_view),
     path('admin/', admin.site.urls),
-    path('', include('octofit_tracker.urls')),
+    path('api/', include(router.urls)),
 ]
